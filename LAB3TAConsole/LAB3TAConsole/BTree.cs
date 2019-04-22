@@ -38,6 +38,7 @@
         /// <returns>Entry for that key, null otherwise.</returns>
         public Entry<TK, TV> Search(TK key)
         {
+            comparisons = 0;
             return this.SearchInternal(this.Root, key);
         }
 
@@ -282,6 +283,8 @@
             return this.DeletePredecessor(node.Children.First());
         }
 
+        public int comparisons = 0;
+
         /// <summary>
         /// Helper method that search for a key in a given BTree.
         /// </summary>
@@ -291,6 +294,8 @@
         private Entry<TK, TV> SearchInternal(Node<TK, TV> node, TK key)
         {
             int i = node.Entries.TakeWhile(entry => key.CompareTo(entry.Key) > 0).Count();
+
+            comparisons += (int)Math.Log(node.Entries.Count, 2) ;
 
             if (i < node.Entries.Count && node.Entries[i].Key.CompareTo(key) == 0)
             {

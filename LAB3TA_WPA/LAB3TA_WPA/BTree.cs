@@ -4,13 +4,6 @@
     using System.Diagnostics;
     using System.Linq;
 
-    /// <summary>
-    /// Based on BTree chapter in "Introduction to Algorithms", by Thomas Cormen, Charles Leiserson, Ronald Rivest.
-    /// 
-    /// This implementation is not thread-safe, and user must handle thread-safety.
-    /// </summary>
-    /// <typeparam name="TK">Type of BTree Key.</typeparam>
-    /// <typeparam name="TV">Type of BTree Value associated with each Key.</typeparam>
     public class BTree<TK, TV> where TK : IComparable<TK>
     {
         public BTree(int degree)
@@ -30,12 +23,7 @@
         public int Degree { get; private set; }
 
         public int Height { get; private set; }
-
-        /// <summary>
-        /// Searches a key in the BTree, returning the entry with it and with the pointer.
-        /// </summary>
-        /// <param name="key">Key being searched.</param>
-        /// <returns>Entry for that key, null otherwise.</returns>
+  
         public Entry<TK, TV> Search(TK key)
         {
             return this.SearchInternal(this.Root, key);
@@ -45,13 +33,7 @@
         {
             this.EditInternal(this.Root, Key, data);
         }
-
-        /// <summary>
-        /// Inserts a new key associated with a pointer in the BTree. This
-        /// operation splits nodes as required to keep the BTree properties.
-        /// </summary>
-        /// <param name="newKey">Key to be inserted.</param>
-        /// <param name="newValue">Value to be associated with inserted key.</param>
+     
         public void Insert(TK newKey, TV newValue)
         {
             // there is space in the root node
@@ -71,11 +53,6 @@
             this.Height++;
         }
 
-        /// <summary>
-        /// Deletes a key from the BTree. This operations moves keys and nodes
-        /// as required to keep the BTree properties.
-        /// </summary>
-        /// <param name="keyToDelete">Key to be deleted.</param>
         public void Delete(TK keyToDelete)
         {
             this.DeleteInternal(this.Root, keyToDelete);
@@ -88,11 +65,6 @@
             }
         }
 
-        /// <summary>
-        /// Internal method to delete keys from the BTree
-        /// </summary>
-        /// <param name="node">Node to use to start search for the key.</param>
-        /// <param name="keyToDelete">Key to be deleted.</param>
         private void DeleteInternal(Node<TK, TV> node, TK keyToDelete)
         {
             int i = node.Entries.TakeWhile(entry => keyToDelete.CompareTo(entry.Key) > 0).Count();
@@ -111,12 +83,6 @@
             }
         }
 
-        /// <summary>
-        /// Helper method that deletes a key from a subtree.
-        /// </summary>
-        /// <param name="parentNode">Parent node used to start search for the key.</param>
-        /// <param name="keyToDelete">Key to be deleted.</param>
-        /// <param name="subtreeIndexInNode">Index of subtree node in the parent node.</param>
         private void DeleteKeyFromSubtree(Node<TK, TV> parentNode, TK keyToDelete, int subtreeIndexInNode)
         {
             Node<TK, TV> childNode = parentNode.Children[subtreeIndexInNode];
@@ -197,19 +163,9 @@
                 }
             }
 
-            // at this point, we know that "child" has at least "degree" nodes, so we can
-            // move on - this guarantees that if any node needs to be removed from it to
-            // guarantee BTree's property, we will be fine with that
             this.DeleteInternal(childNode, keyToDelete);
         }
 
-        /// <summary>
-        /// Helper method that deletes key from a node that contains it, be this
-        /// node a leaf node or an internal node.
-        /// </summary>
-        /// <param name="node">Node that contains the key.</param>
-        /// <param name="keyToDelete">Key to be deleted.</param>
-        /// <param name="keyIndexInNode">Index of key within the node.</param>
         private void DeleteKeyFromNode(Node<TK, TV> node, TK keyToDelete, int keyIndexInNode)
         {
             // if leaf, just remove it from the list of entries (we're guaranteed to have
@@ -248,11 +204,6 @@
             }
         }
 
-        /// <summary>
-        /// Helper method that deletes a predecessor key (i.e. rightmost key) for a given node.
-        /// </summary>
-        /// <param name="node">Node for which the predecessor will be deleted.</param>
-        /// <returns>Predecessor entry that got deleted.</returns>
         private Entry<TK, TV> DeletePredecessor(Node<TK, TV> node)
         {
             if (node.IsLeaf)
@@ -265,11 +216,6 @@
             return this.DeletePredecessor(node.Children.Last());
         }
 
-        /// <summary>
-        /// Helper method that deletes a successor key (i.e. leftmost key) for a given node.
-        /// </summary>
-        /// <param name="node">Node for which the successor will be deleted.</param>
-        /// <returns>Successor entry that got deleted.</returns>
         private Entry<TK, TV> DeleteSuccessor(Node<TK, TV> node)
         {
             if (node.IsLeaf)
@@ -282,12 +228,6 @@
             return this.DeletePredecessor(node.Children.First());
         }
 
-        /// <summary>
-        /// Helper method that search for a key in a given BTree.
-        /// </summary>
-        /// <param name="node">Node used to start the search.</param>
-        /// <param name="key">Key to be searched.</param>
-        /// <returns>Entry object with key information if found, null otherwise.</returns>
         private Entry<TK, TV> SearchInternal(Node<TK, TV> node, TK key)
         {
             int i = node.Entries.TakeWhile(entry => key.CompareTo(entry.Key) > 0).Count();
@@ -305,12 +245,6 @@
             SearchInternal(node, key).Value = data;
         }
 
-        /// <summary>
-        /// Helper method that splits a full node into two nodes.
-        /// </summary>
-        /// <param name="parentNode">Parent node that contains node to be split.</param>
-        /// <param name="nodeToBeSplitIndex">Index of the node to be split within parent.</param>
-        /// <param name="nodeToBeSplit">Node to be split.</param>
         private void SplitChild(Node<TK, TV> parentNode, int nodeToBeSplitIndex, Node<TK, TV> nodeToBeSplit)
         {
             var newNode = new Node<TK, TV>(this.Degree);
