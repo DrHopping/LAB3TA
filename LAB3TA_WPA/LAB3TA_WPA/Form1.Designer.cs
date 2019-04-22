@@ -44,6 +44,8 @@
             this.FindButton = new System.Windows.Forms.Button();
             this.FindKeyText = new System.Windows.Forms.TextBox();
             this.RandomButton = new System.Windows.Forms.Button();
+            this.SaveButton = new System.Windows.Forms.Button();
+            this.LoadButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -190,11 +192,33 @@
             this.RandomButton.UseVisualStyleBackColor = true;
             this.RandomButton.Click += new System.EventHandler(this.RandomButton_Click);
             // 
+            // SaveButton
+            // 
+            this.SaveButton.Location = new System.Drawing.Point(12, 295);
+            this.SaveButton.Name = "SaveButton";
+            this.SaveButton.Size = new System.Drawing.Size(287, 23);
+            this.SaveButton.TabIndex = 15;
+            this.SaveButton.Text = "Save";
+            this.SaveButton.UseVisualStyleBackColor = true;
+            this.SaveButton.Click += new System.EventHandler(this.SaveButton_Click);
+            // 
+            // LoadButton
+            // 
+            this.LoadButton.Location = new System.Drawing.Point(12, 325);
+            this.LoadButton.Name = "LoadButton";
+            this.LoadButton.Size = new System.Drawing.Size(287, 23);
+            this.LoadButton.TabIndex = 16;
+            this.LoadButton.Text = "Load";
+            this.LoadButton.UseVisualStyleBackColor = true;
+            this.LoadButton.Click += new System.EventHandler(this.LoadButton_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(670, 300);
+            this.ClientSize = new System.Drawing.Size(670, 362);
+            this.Controls.Add(this.LoadButton);
+            this.Controls.Add(this.SaveButton);
             this.Controls.Add(this.RandomButton);
             this.Controls.Add(this.FindKeyText);
             this.Controls.Add(this.FindButton);
@@ -234,6 +258,8 @@
         private System.Windows.Forms.Button FindButton;
         private System.Windows.Forms.TextBox FindKeyText;
         private System.Windows.Forms.Button RandomButton;
+        private System.Windows.Forms.Button SaveButton;
+        private System.Windows.Forms.Button LoadButton;
     }
 }
 

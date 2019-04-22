@@ -11,6 +11,7 @@ namespace LAB3TAConsole
             this.degree = degree;
             this.Children = new List<Node<TK, TV>>(degree);
             this.Entries = new List<Entry<TK, TV>>(degree);
+
         }
 
         public List<Node<TK, TV>> Children { get; set; }

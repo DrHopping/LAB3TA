@@ -1,6 +1,7 @@
 ﻿namespace LAB3TAConsole
 {
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
 
@@ -23,9 +24,12 @@
         public int Degree { get; private set; }
 
         public int Height { get; private set; }
-  
+
+        public List<int> way;
+
         public Entry<TK, TV> Search(TK key)
         {
+            way = new List<int>();
             return this.SearchInternal(this.Root, key);
         }
 
@@ -228,12 +232,15 @@
             return this.DeletePredecessor(node.Children.First());
         }
 
+        
+
         private Entry<TK, TV> SearchInternal(Node<TK, TV> node, TK key)
         {
             int i = node.Entries.TakeWhile(entry => key.CompareTo(entry.Key) > 0).Count();
-
+            way.Add(i);
             if (i < node.Entries.Count && node.Entries[i].Key.CompareTo(key) == 0)
             {
+                node.Entries[i].way = way;
                 return node.Entries[i];
             }
 

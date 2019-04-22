@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,7 +15,7 @@ namespace LAB3TA_WPA
     public partial class Form1 : Form
     {
         Random rand = new Random();
-        static BTree<int, string> tree = new BTree<int, string>(50);
+        static BTree<int, string> tree = new BTree<int, string>(2);
         static SortedSet<int> keys = new SortedSet<int>();
         public Form1()
         {
@@ -26,7 +27,7 @@ namespace LAB3TA_WPA
             dataGrid.Rows.Clear();
             foreach (var key in keys)
             {
-                dataGrid.Rows.Add(tree.Search(key).Key, tree.Search(key).Value);
+                dataGrid.Rows.Add(tree.Search(key).Key, tree.Search(key).Value + " " + string.Join("-",tree.Search(key).way));
             }
             dataGrid.Sort(dataGrid.Columns[0], ListSortDirection.Ascending);
         }
@@ -106,6 +107,39 @@ namespace LAB3TA_WPA
         private void RandomButton_Click(object sender, EventArgs e)
         {
             AddRandom(10);
+        }
+
+        private void SaveButton_Click(object sender, EventArgs e)
+        {
+            using (StreamWriter sw = new StreamWriter("save.txt"))
+            {
+                foreach (var key in keys)
+                {
+                    sw.WriteLine(tree.Search(key).Key + " " + tree.Search(key).Value);
+                }
+            }
+        }
+
+        private void LoadButton_Click(object sender, EventArgs e)
+        {
+            BTree<int, string> newTree = new BTree<int, string>(2);
+            using (StreamReader sr = new StreamReader("save.txt"))
+            {
+                while(true)
+                {
+                    string line = sr.ReadLine();
+                    if (line != null)
+                    {
+                        newTree.Insert(int.Parse(line.Split()[0]), line.Split()[1]);
+                        keys.Add(int.Parse(line.Split()[0]));
+                    }
+                    else
+                        break;
+                }
+                
+            }
+            tree = newTree;
+            UpdateGrid(dataGridView1);
         }
     }
 }
